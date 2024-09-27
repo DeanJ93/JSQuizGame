@@ -51,6 +51,7 @@ function restartGame() {
     currentQuestionIndex = 0;
     document.getElementById('buttons').style.display = 'block';
     document.getElementById('restart-container').style.display = 'none';
+    document.getElementById('score-container').style.display = 'block';
     updateScore();
     loadQuestion();
 }

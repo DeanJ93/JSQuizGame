@@ -25,7 +25,7 @@ h1,p {
   }
   
   button {
-      background-color: #007bff;
+      background-color: #1d2c2c;
       color: white;
       border: none;
       border-radius: 4px;
@@ -36,7 +36,8 @@ h1,p {
   }
   
   button:hover {
-      background-color: #0056b3;
+      background-color: #ffffff;
+      color: black;
   }
   
   #score-container {
