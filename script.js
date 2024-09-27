@@ -1,3 +1,18 @@
+/*
+    loads the first question from the list. The user's score is incremented by 1 if they get a question right. 
+ */
+
+Array.prototype.random = function () {
+    return this[Math.floor((Math.random()*this.length))];
+    }
+    
+
+const quotes = [
+    {author: "Peter Drucker", quote: "Knowledge has to be improved, challenged, and increased constantly, or it vanishes."},
+    {author: "William Shakespeare", quote: "Ignorance is the curse of God; knowledge is the wing wherewith we fly to heaven."},
+    {author: "Anthony J. D'Angelo", quote: "Wherever you go, no matter what the weather, always bring your own sunshine"}
+]
+
 const questions = [
     {question: "A slug's blood is green.", answer: true},
     {question: "The loudest animal is the African Elephant.", answer: false},
@@ -15,6 +30,13 @@ const questions = [
 
 let score = 0;
 let currentQuestionIndex = 0;
+
+function loadQuote(){
+    const quote = quotes.random()
+    document.getElementById("quote").innerHTML = '"' + quote.quote +'"'
+    document.getElementById("author").innerHTML = quote.author
+}
+
 
 function loadQuestion() {
     if (currentQuestionIndex < questions.length) {
@@ -58,4 +80,5 @@ function restartGame() {
 
 window.onload = function() {
     loadQuestion();
+    loadQuote();
 };

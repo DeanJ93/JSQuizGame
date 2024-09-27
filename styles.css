@@ -3,7 +3,7 @@ h1,p {
   }
   body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      background: linear-gradient(135deg, #7ba7ca, #3e3a75);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -25,7 +25,7 @@ h1,p {
   }
   
   button {
-      background-color: #1d2c2c;
+      background-color: #494b4b;
       color: white;
       border: none;
       border-radius: 4px;
@@ -44,4 +44,19 @@ h1,p {
       margin-top: 20px;
       font-size: 18px;
   }
+
+  #quote-container {
+    margin-top: 50px;
+  }
+
+  #quote-container img {
+    float: left;
+    width: 30px;
+    padding: 0;
+    margin: 0;
+  }
   
+  #quote-container p {
+    padding-left: 0;
+    margin-left: 0;
+  }
