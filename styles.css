@@ -1,4 +1,4 @@
-h1,p {
+h1,p,q {
     color: white;
   }
   body {
@@ -56,7 +56,7 @@ h1,p {
     margin: 0;
   }
   
-  #quote-container p {
+  #quote-container q {
     padding-left: 0;
     margin-left: 0;
   }

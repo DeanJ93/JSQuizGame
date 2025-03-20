@@ -33,7 +33,7 @@ let currentQuestionIndex = 0;
 
 function loadQuote(){
     const quote = quotes.random()
-    document.getElementById("quote").innerHTML = '"' + quote.quote +'"'
+    document.getElementById("quote").innerHTML = quote.quote
     document.getElementById("author").innerHTML = quote.author
 }
 
