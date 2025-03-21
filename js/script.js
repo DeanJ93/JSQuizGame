@@ -3,12 +3,18 @@
  */
 class Question {
     constructor(question, answer) {
-        this.question = question;
+        this.question = this.decodeHtmlEntities(question);
         this.answer = this.parseAnswer(answer); // Pass `answer` to the method
     }
 
     parseAnswer(answer) {
         return answer.toLowerCase() === "true"; // Correct comparison
+    }
+
+    decodeHtmlEntities(str) {
+        const textArea = document.createElement("textarea");
+        textArea.innerHTML = str;
+        return textArea.value;
     }
 }
     
@@ -34,9 +40,9 @@ let questions = [
     {question: "A few ounces of chocolate can to kill a small dog.", answer: true}
 ];
     
-function decodeHtmlEntities(str) {
-    return str.replace("&#039;", "'");
-}
+// function decodeHtmlEntities(str) {
+//     return str.replace("&#039;", "'");
+// }
 
 function fetchTrivia() {
     const url = 'https://opentdb.com/api.php?amount=10&type=boolean';
@@ -52,8 +58,8 @@ function fetchTrivia() {
             let questions = [];
 
             for (let x of data.results) {
-                sanitisedQuestion = decodeHtmlEntities(x.question)
-                questions.push(new Question(sanitisedQuestion, x.correct_answer));
+                // sanitisedQuestion = decodeHtmlEntities(x.question)
+                questions.push(new Question(x.question, x.correct_answer));
             }
 
             return questions; // Return the array of Question objects
