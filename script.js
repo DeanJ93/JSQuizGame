@@ -1,19 +1,25 @@
 /*
     loads the first question from the list. The user's score is incremented by 1 if they get a question right. 
  */
-
-Array.prototype.random = function () {
-    return this[Math.floor((Math.random()*this.length))];
+class Question {
+    constructor(question, answer) {
+        this.question = this.#decodeHtmlEntities(question);
+        this.answer = this.#parseAnswer(answer); // Pass `answer` to the method
     }
-    
 
-const quotes = [
-    {author: "Peter Drucker", quote: "Knowledge has to be improved, challenged, and increased constantly, or it vanishes."},
-    {author: "William Shakespeare", quote: "Ignorance is the curse of God; knowledge is the wing wherewith we fly to heaven."},
-    {author: "Anthony J. D'Angelo", quote: "Wherever you go, no matter what the weather, always bring your own sunshine"}
-]
+    #parseAnswer(answer) {
+        if (typeof answer === 'boolean') return answer;
+        return answer.toLowerCase() === "true";
+    }
 
-const questions = [
+    #decodeHtmlEntities(str) {
+        const textArea = document.createElement("textarea");
+        textArea.innerHTML = str;
+        return textArea.value;
+    }
+}
+
+const fallbackQuestions = [
     {question: "A slug's blood is green.", answer: true},
     {question: "The loudest animal is the African Elephant.", answer: false},
     {question: "Approximately one quarter of human bones are in the feet.", answer: true},
@@ -27,16 +33,45 @@ const questions = [
     {question: "No piece of square dry paper can be folded in half more than 7 times.", answer: false},
     {question: "A few ounces of chocolate can to kill a small dog.", answer: true}
 ];
+    
+// function decodeHtmlEntities(str) {
+//     return str.replace("&#039;", "'");
+// }
+
+function fetchTrivia() {
+    const url = 'https://opentdb.com/api.php?amount=10&type=boolean';
+
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json(); // Return the parsed JSON promise
+        })
+        .then(data => {
+            let questions = [];
+
+            for (let x of data.results) {
+                // sanitisedQuestion = decodeHtmlEntities(x.question)
+                questions.push(new Question(x.question, x.correct_answer));
+            }
+
+            return questions; // Return the array of Question objects
+        })
+        .catch(error => {
+            console.error("Error fetching trivia:", error);
+            return fallbackQuestions.map(q => new Question(q.question, q.answer));
+        });
+}
+    
+
+Array.prototype.random = function () {
+    return this[Math.floor((Math.random()*this.length))];
+    }
 
 let score = 0;
 let currentQuestionIndex = 0;
-
-function loadQuote(){
-    const quote = quotes.random()
-    document.getElementById("quote").innerHTML = quote.quote
-    document.getElementById("author").innerHTML = quote.author
-}
-
+let questions = [];
 
 function loadQuestion() {
     if (currentQuestionIndex < questions.length) {
@@ -62,10 +97,29 @@ function updateScore() {
 }
 
 function endGame() {
-    document.getElementById('question').textContent = "Quiz over! Your final score is " + score + ".";
+    document.getElementById('question').textContent = "Quiz over! Your final score is " + score + "/" + questions.length + ".";
     document.getElementById('buttons').style.display = 'none';
     document.getElementById('restart-container').style.display = 'block';
     document.getElementById('score-container').style.display = 'none';
+}
+
+function startScreen() {
+    // document.getElementById('question').textContent = "Quiz over! Your final score is " + score + "/" + numberOfQuestions + ".";
+    document.getElementById('buttons').style.display = 'none';
+    document.getElementById('restart-container').style.display = 'block';
+    document.getElementById('score-container').style.display = 'none';
+    document.getElementById('question-container').style.display = 'none';
+    document.getElementById('restart-btn').textContent = 'start'
+}
+
+async function startGame(){
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('score-container').style.display = 'block';
+    document.getElementById('question-container').style.display = 'block';
+    updateScore();
+
+    questions = await fetchTrivia();
+    loadQuestion();
 }
 
 function restartGame() {
@@ -74,11 +128,10 @@ function restartGame() {
     document.getElementById('buttons').style.display = 'block';
     document.getElementById('restart-container').style.display = 'none';
     document.getElementById('score-container').style.display = 'block';
-    updateScore();
-    loadQuestion();
+
+    startGame()
 }
 
 window.onload = function() {
-    loadQuestion();
-    loadQuote();
+    startScreen()
 };
